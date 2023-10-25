@@ -20,7 +20,7 @@ export default function Header({ currentState, setCurrentState, setTime }) {
             currentState !== index && { borderColor: "transparent" },
           ]}
         >
-          <Text>{item}</Text>
+          <Text style={{ fontWeight: "bold" }}>{item}</Text>
         </TouchableOpacity>
       ))}
     </View>
@@ -32,5 +32,8 @@ const styles = StyleSheet.create({
     width: "33%",
     borderWidth: 3,
     padding: 5,
+    borderColor: "white",
+    marginVertical: 20,
+    borderRadius: 10,
   },
 });
