@@ -15,14 +15,48 @@ import Timer from "./src/components/Timer";
 
 const options = ["Pomodoro", "Short Break", "Long Break"];
 
-const colors = ["#F7DC6F", "#A2D9CE", "#D7BDE2"];
+const colors = ["#C0392B", "#F4D03F", "#2ECC71"];
 
 export default function App() {
   const [time, setTime] = useState(25 * 60);
   const [currentState, setCurrentState] = useState(0 | 1 | 2);
   const [clock, setClock] = useState(false);
+  const [long, setLong] = useState(false);
 
   useEffect(() => {
+    let interval = null;
+
+    if (clock) {
+      interval = setInterval(() => {
+        setTime(time - 1);
+      }, 10);
+    } else {
+      clearInterval(interval);
+    }
+
+    if (time === 0 && currentState === 0) {
+      setCurrentState(1);
+      setTime(300);
+      if (time === 0 && currentState === 1) {
+        setCurrentState(0);
+        setTime(1500);
+      }
+      if (time === 0 && currentState === 2) {
+        setCurrentState(0);
+        setTime(1500);
+      } else {
+        setTime(900);
+      }
+    }
+
+    return () => clearInterval(interval);
+  }, [clock, time]);
+
+  /*
+
+  Respaldo del useEffect
+
+   useEffect(() => {
     let interval = null;
 
     if (clock) {
@@ -47,6 +81,8 @@ export default function App() {
 
     return () => clearInterval(interval);
   }, [clock, time]);
+
+  */
 
   function handleStartStop() {
     clock ? playStopSound() : playStartSound();
@@ -87,7 +123,7 @@ export default function App() {
         <Timer time={time} />
         <TouchableOpacity style={styles.button} onPress={handleStartStop}>
           <Text style={{ color: "white", fontWeight: "bold" }}>
-            {clock ? "STOP" : "START"}
+            {clock ? "STOP" : "START POMODORO"}
           </Text>
         </TouchableOpacity>
       </View>
