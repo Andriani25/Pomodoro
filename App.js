@@ -21,7 +21,10 @@ export default function App() {
   const [time, setTime] = useState(25 * 60);
   const [currentState, setCurrentState] = useState(0 | 1 | 2);
   const [clock, setClock] = useState(false);
+  // estado long para saber si el break es long o short, para iterar entre ambos
   const [long, setLong] = useState(false);
+  // estado para marcar cuantos tiempos de trabajo se harán
+  const [working, setWorking] = useState(0);
 
   useEffect(() => {
     let interval = null;
