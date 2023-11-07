@@ -24,6 +24,6 @@ const styles = StyleSheet.create({
     fontSize: 80,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#696969",
+    color: "black",
   },
 });

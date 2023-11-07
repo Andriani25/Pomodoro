@@ -5,24 +5,22 @@ import {
   Platform,
   Text,
   View,
-  Button,
   SafeAreaView,
   TouchableOpacity,
 } from "react-native";
 import { Audio } from "expo-av";
 import Header from "./src/components/Header";
 import Timer from "./src/components/Timer";
+import Counter from "./src/components/Counter";
 
-const options = ["Pomodoro", "Short Break", "Long Break"];
-
-const colors = ["#C0392B", "#F4D03F", "#2ECC71"];
+const colors = ["#9370db", "#87ceeb", "#dda0dd"];
 
 export default function App() {
   const [time, setTime] = useState(25 * 60);
   const [currentState, setCurrentState] = useState(0 | 1 | 2);
   const [clock, setClock] = useState(false);
-  // estado long para saber si el break es long o short, para iterar entre ambos
   const [short, setShort] = useState(true);
+  const [work, setWork] = useState(0);
 
   useEffect(() => {
     let interval = null;
@@ -42,11 +40,13 @@ export default function App() {
       setCurrentState(1);
       setTime(300);
       setShort(false);
+      setWork(work + 1);
     }
     if (time === 0 && currentState === 0 && short === false) {
       setCurrentState(2);
       setTime(900);
       setShort(true);
+      setWork(work + 1);
     }
     if (time === 0 && currentState === 1) {
       setCurrentState(0);
@@ -57,7 +57,7 @@ export default function App() {
       setTime(1500);
       setShort(true);
     }
-    console.log(time, currentState);
+
     return () => clearInterval(interval);
   }, [clock, time, currentState]);
 
@@ -80,6 +80,15 @@ export default function App() {
     await sound.playAsync();
   }
 
+  // Falta integrar el sonido al counter
+
+  async function playWorkSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./assets/workFinish.mp3")
+    );
+    await sound.playAsync();
+  }
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors[currentState] }]}
@@ -89,8 +98,10 @@ export default function App() {
           flex: 1,
           paddingTop: Platform.OS === "android" && 30,
           paddingHorizontal: 15,
+          overflow: "hidden",
         }}
       >
+        <StatusBar style="inverted" />
         <Text style={styles.text}>Pomodoro</Text>
         <Header
           setCurrentState={setCurrentState}
@@ -103,6 +114,7 @@ export default function App() {
             {clock ? "STOP" : "START POMODORO"}
           </Text>
         </TouchableOpacity>
+        <Counter work={work} />
       </View>
     </SafeAreaView>
   );
@@ -110,12 +122,12 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  text: { fontSize: 32, fontWeight: "bold" },
+  text: { fontSize: 32, fontWeight: "bold", color: "white" },
   button: {
     alignItems: "center",
-    backgroundColor: "#696969",
+    backgroundColor: "black",
     padding: 15,
-    marginTop: 15,
+    margin: 40,
     borderRadius: 15,
   },
 });
