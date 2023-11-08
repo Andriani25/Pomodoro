@@ -23,6 +23,12 @@ export default function App() {
   const [work, setWork] = useState(0);
 
   useEffect(() => {
+    if (work > 0) {
+      playWorkSound();
+    }
+  }, [work]);
+
+  useEffect(() => {
     let interval = null;
 
     if (clock) {
@@ -76,15 +82,6 @@ export default function App() {
   async function playStopSound() {
     const { sound } = await Audio.Sound.createAsync(
       require("./assets/stop.mp3")
-    );
-    await sound.playAsync();
-  }
-
-  // Falta integrar el sonido al counter
-
-  async function playWorkSound() {
-    const { sound } = await Audio.Sound.createAsync(
-      require("./assets/workFinish.mp3")
     );
     await sound.playAsync();
   }
