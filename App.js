@@ -23,12 +23,6 @@ export default function App() {
   const [work, setWork] = useState(0);
 
   useEffect(() => {
-    if (work > 0) {
-      playWorkSound();
-    }
-  }, [work]);
-
-  useEffect(() => {
     let interval = null;
 
     if (clock) {
@@ -46,12 +40,14 @@ export default function App() {
       setCurrentState(1);
       setTime(300);
       setShort(false);
+      playWorkSound();
       setWork(work + 1);
     }
     if (time === 0 && currentState === 0 && short === false) {
       setCurrentState(2);
       setTime(900);
       setShort(true);
+      playWorkSound();
       setWork(work + 1);
     }
     if (time === 0 && currentState === 1) {
@@ -82,6 +78,13 @@ export default function App() {
   async function playStopSound() {
     const { sound } = await Audio.Sound.createAsync(
       require("./assets/stop.mp3")
+    );
+    await sound.playAsync();
+  }
+
+  async function playWorkSound() {
+    const { sound } = await Audio.Sound.createAsync(
+      require("./assets/workFinish.mp3")
     );
     await sound.playAsync();
   }
